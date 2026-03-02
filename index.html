@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Task Manager Pro - Smart Task Management</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-brain"></i>
+                    <h1>AI Task Pro</h1>
+                </div>
+                <button class="sidebar-toggle" id="sidebarToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+
+            <nav class="sidebar-nav">
+                <button class="nav-item active" data-view="dashboard">
+                    <i class="fas fa-chart-pie"></i>
+                    <span>Dashboard</span>
+                </button>
+                <button class="nav-item" data-view="tasks">
+                    <i class="fas fa-tasks"></i>
+                    <span>All Tasks</span>
+                </button>
+                <button class="nav-item" data-view="today">
+                    <i class="fas fa-calendar-day"></i>
+                    <span>Today</span>
+                </button>
+                <button class="nav-item" data-view="upcoming">
+                    <i class="fas fa-calendar-week"></i>
+                    <span>Upcoming</span>
+                </button>
+                <button class="nav-item" data-view="completed">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Completed</span>
+                </button>
+            </nav>
+
+            <div class="sidebar-section">
+                <h3>Categories</h3>
+                <div class="categories-list" id="categoriesList">
+                    <!-- Categories will be dynamically added -->
+                </div>
+                <button class="add-category-btn" id="addCategoryBtn">
+                    <i class="fas fa-plus"></i>
+                    <span>Add Category</span>
+                </button>
+            </div>
+
+            <div class="sidebar-section">
+                <h3>Priority</h3>
+                <div class="priority-filters">
+                    <button class="priority-filter active" data-priority="all">
+                        <i class="fas fa-list"></i>
+                        <span>All</span>
+                    </button>
+                    <button class="priority-filter" data-priority="high">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <span>High</span>
+                    </button>
+                    <button class="priority-filter" data-priority="medium">
+                        <i class="fas fa-minus-circle"></i>
+                        <span>Medium</span>
+                    </button>
+                    <button class="priority-filter" data-priority="low">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Low</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="sidebar-footer">
+                <button class="theme-toggle" id="themeToggle">
+                    <i class="fas fa-moon"></i>
+                    <span>Dark Mode</span>
+                </button>
+                <button class="ai-settings-btn" id="aiSettingsBtn">
+                    <i class="fas fa-robot"></i>
+                    <span>AI Settings</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="main-header">
+                <div class="header-left">
+                    <button class="menu-toggle" id="menuToggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="searchInput" placeholder="Search tasks...">
+                    </div>
+                </div>
+                <div class="header-right">
+                    <div class="stats-badge">
+                        <span id="pendingTasksCount">0</span>
+                        <span>pending</span>
+                    </div>
+                    <button class="add-task-btn" id="addTaskBtn">
+                        <i class="fas fa-plus"></i>
+                        <span>Add Task</span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Dashboard View -->
+            <div class="view active" id="dashboardView">
+                <div class="dashboard-header">
+                    <h2 id="greeting">Good Morning! 👋</h2>
+                    <p id="currentDate">Loading date...</p>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon total">
+                            <i class="fas fa-tasks"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="totalTasks">0</h3>
+                            <p>Total Tasks</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon pending">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="pendingTasks">0</h3>
+                            <p>Pending</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon completed">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="completedTasks">0</h3>
+                            <p>Completed</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon overdue">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="overdueTasks">0</h3>
+                            <p>Overdue</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Progress Section -->
+                <div class="progress-section">
+                    <div class="progress-header">
+                        <h3><i class="fas fa-chart-line"></i> Weekly Progress</h3>
+                        <span id="completionRate">0%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                    <div class="progress-stats">
+                        <span>This week: <strong id="weekCompleted">0</strong>/<strong id="weekTotal">0</strong> tasks</span>
+                    </div>
+                </div>
+
+                <!-- Today's Tasks -->
+                <div class="tasks-section">
+                    <div class="section-header">
+                        <h3><i class="fas fa-sun"></i> Today's Tasks</h3>
+                        <button class="view-all-btn" data-view="today">View All</button>
+                    </div>
+                    <div class="tasks-list" id="todayTasksList">
+                        <!-- Tasks will be dynamically added -->
+                    </div>
+                </div>
+
+                <!-- AI Suggestions -->
+                <div class="ai-suggestions" id="aiSuggestions">
+                    <div class="section-header">
+                        <h3><i class="fas fa-sparkles"></i> AI Suggestions</h3>
+                        <button class="refresh-ai-btn" id="refreshAiBtn">
+                            <i class="fas fa-sync-alt"></i>
+                            Refresh
+                        </button>
+                    </div>
+                    <div class="ai-suggestions-list" id="aiSuggestionsList">
+                        <!-- AI suggestions will be dynamically added -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- All Tasks View -->
+            <div class="view" id="tasksView">
+                <div class="view-header">
+                    <h2>All Tasks</h2>
+                    <div class="view-actions">
+                        <select id="sortBy" class="sort-select">
+                            <option value="date">Sort by Date</option>
+                            <option value="priority">Sort by Priority</option>
+                            <option value="name">Sort by Name</option>
+                            <option value="category">Sort by Category</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="tasks-list" id="allTasksList">
+                    <!-- All tasks will be dynamically added -->
+                </div>
+            </div>
+
+            <!-- Today View -->
+            <div class="view" id="todayView">
+                <div class="view-header">
+                    <h2><i class="fas fa-calendar-day"></i> Today's Tasks</h2>
+                </div>
+                <div class="tasks-list" id="todayViewList">
+                    <!-- Today's tasks will be dynamically added -->
+                </div>
+            </div>
+
+            <!-- Upcoming View -->
+            <div class="view" id="upcomingView">
+                <div class="view-header">
+                    <h2><i class="fas fa-calendar-week"></i> Upcoming Tasks</h2>
+                </div>
+                <div class="tasks-list" id="upcomingViewList">
+                    <!-- Upcoming tasks will be dynamically added -->
+                </div>
+            </div>
+
+            <!-- Completed View -->
+            <div class="view" id="completedView">
+                <div class="view-header">
+                    <h2><i class="fas fa-check-circle"></i> Completed Tasks</h2>
+                </div>
+                <div class="tasks-list" id="completedViewList">
+                    <!-- Completed tasks will be dynamically added -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add/Edit Task Modal -->
+    <div class="modal" id="taskModal">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Add New Task</h3>
+                <button class="modal-close" id="modalClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="taskForm">
+                <input type="hidden" id="taskId">
+                
+                <div class="form-group">
+                    <label for="taskTitle">Task Title *</label>
+                    <input type="text" id="taskTitle" required placeholder="Enter task title">
+                </div>
+
+                <div class="form-group">
+                    <label for="taskDescription">Description</label>
+                    <textarea id="taskDescription" rows="3" placeholder="Add task description..."></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="taskCategory">Category</label>
+                        <select id="taskCategory">
+                            <option value="personal">Personal</option>
+                            <option value="work">Work</option>
+                            <option value="urgent">Urgent</option>
+                            <option value="shopping">Shopping</option>
+                            <option value="health">Health</option>
+                            <option value="finance">Finance</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="taskPriority">Priority</label>
+                        <select id="taskPriority">
+                            <option value="low">Low</option>
+                            <option value="medium" selected>Medium</option>
+                            <option value="high">High</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="taskDueDate">Due Date</label>
+                        <input type="date" id="taskDueDate">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="taskDueTime">Due Time</label>
+                        <input type="time" id="taskDueTime">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="taskRecurring">
+                        <span>Recurring Task</span>
+                    </label>
+                </div>
+
+                <div class="form-group" id="subtasksGroup">
+                    <label>Subtasks</label>
+                    <div class="subtasks-list" id="subtasksList">
+                        <!-- Subtasks will be added here -->
+                    </div>
+                    <button type="button" class="add-subtask-btn" id="addSubtaskBtn">
+                        <i class="fas fa-plus"></i> Add Subtask
+                    </button>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" id="cancelBtn">Cancel</button>
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-save"></i>
+                        <span id="saveBtnText">Save Task</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- AI Settings Modal -->
+    <div class="modal" id="aiSettingsModal">
+        <div class="modal-overlay"></div>
+        <div class="modal-content modal-small">
+            <div class="modal-header">
+                <h3><i class="fas fa-robot"></i> AI Settings</h3>
+                <button class="modal-close" id="aiSettingsClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="aiSettingsForm">
+                <div class="form-group">
+                    <label for="aiApiKey">OpenAI API Key (Optional)</label>
+                    <input type="password" id="aiApiKey" placeholder="sk-...">
+                    <small>Get your API key from <a href="https://platform.openai.com" target="_blank">OpenAI</a></small>
+                </div>
+
+                <div class="form-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="aiAutoSuggest" checked>
+                        <span>Enable AI Auto-Suggestions</span>
+                    </label>
+                </div>
+
+                <div class="form-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="aiAutoCategorize" checked>
+                        <span>Auto-categorize tasks with AI</span>
+                    </label>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" id="aiSettingsCancel">Cancel</button>
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-save"></i>
+                        Save Settings
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Category Modal -->
+    <div class="modal" id="categoryModal">
+        <div class="modal-overlay"></div>
+        <div class="modal-content modal-small">
+            <div class="modal-header">
+                <h3><i class="fas fa-folder"></i> Add Category</h3>
+                <button class="modal-close" id="categoryModalClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="categoryForm">
+                <div class="form-group">
+                    <label for="categoryName">Category Name</label>
+                    <input type="text" id="categoryName" required placeholder="Enter category name">
+                </div>
+
+                <div class="form-group">
+                    <label for="categoryColor">Color</label>
+                    <div class="color-picker">
+                        <input type="color" id="categoryColor" value="#667eea">
+                        <div class="color-presets">
+                            <span class="color-preset" data-color="#667eea"></span>
+                            <span class="color-preset" data-color="#f093fb"></span>
+                            <span class="color-preset" data-color="#4facfe"></span>
+                            <span class="color-preset" data-color="#43e97b"></span>
+                            <span class="color-preset" data-color="#fa709a"></span>
+                            <span class="color-preset" data-color="#fee140"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" id="categoryCancel">Cancel</button>
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-plus"></i>
+                        Add Category
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Task Details Modal -->
+    <div class="modal" id="taskDetailsModal">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Task Details</h3>
+                <button class="modal-close" id="taskDetailsClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="task-details-content" id="taskDetailsContent">
+                <!-- Task details will be displayed here -->
+            </div>
+            <div class="task-details-actions">
+                <button class="btn-edit" id="editTaskBtn">
+                    <i class="fas fa-edit"></i> Edit
+                </button>
+                <button class="btn-delete" id="deleteTaskBtn">
+                    <i class="fas fa-trash"></i> Delete
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
